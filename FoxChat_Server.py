@@ -29,12 +29,15 @@ def main():
 
 def recieve(conn, data):
   print "listening"
-  while True:
-    print "ey"
+  while data != "disconnect":
     data = conn.recv(BUFFER_SIZE)
     print data
     for user in users:
       user.send(data)
+        
+  conn.send("disconnect")
+  users.remove(conn)
+  conn.close()
 
     
 
