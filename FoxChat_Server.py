@@ -1,10 +1,9 @@
 import socket
 import thread
-import pickle
 
 BUFFER_SIZE = 1024
 data = "no data"
-chatList = []
+users = []
 
 def main():
   TCP_IP = socket.gethostbyname(socket.gethostname())
@@ -18,10 +17,10 @@ def main():
 
   while True:
     conn, addr = sock.accept()
+    users.append(conn)
     print "Connection address: ", addr
     try:
-      thread.start_new_thread( recieve, (conn, data) )
-      thread.start_new_thread( send, (conn, data, chatList, chatList) )
+      thread.start_new_thread( recieve, (conn, data))
     except:
       print "Error: unable to start thread"
 
@@ -32,19 +31,11 @@ def recieve(conn, data):
   print "listening"
   while True:
     print "ey"
-    dt = conn.recv(BUFFER_SIZE)
-    print dt
-    chatList.append(dt)
-    
+    data = conn.recv(BUFFER_SIZE)
+    print data
+    for user in users:
+      user.send(data)
 
-def send(conn, data, curChatList, chatList):
-    while 1:
-        if curChatList != chatList:
-            print chatList
-            data = pickle.dumps(chatList)
-            conn.send(data)
-            chatList = curChatList
-            
     
 
 if __name__ == "__main__":
