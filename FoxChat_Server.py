@@ -28,7 +28,7 @@ def main():
 
 
 def recieve(conn, data):
-  print "listening"
+  print "user connected"
   while data != "disconnect":
     data = conn.recv(BUFFER_SIZE)
     print data
