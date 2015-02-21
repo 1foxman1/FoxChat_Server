@@ -28,14 +28,22 @@ def main():
 
 
 def recieve(conn, data):
-  print "user connected"
+  data = "User connected"
   while data != "disconnect":
-    data = conn.recv(BUFFER_SIZE)
     print data
-    for user in users:
-      user.send(data)
+    try:
+      data = conn.recv(BUFFER_SIZE)
+      for user in users:
+        user.send(data)
+    except:
+      data = "disconnect"
         
-  conn.send("disconnect")
+  try:
+    conn.send("disconnect")
+    print "User disconnected"
+  except:
+    print "User disconnected (abrupt)"
+    
   users.remove(conn)
   conn.close()
 
